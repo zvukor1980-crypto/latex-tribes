@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#140e09" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Племена" />
+    <meta name="description" content="LATEX TRIBES — Племена воительниц. Приключение на острове Виа." />
+    <title>LATEX TRIBES — Племена воительниц</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icon-180.png" />
+    <script type="module" crossorigin src="./assets/index-R0ewTN2j.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-gKlftnuM.css">
+  <link rel="manifest" href="./manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="./registerSW.js"></script></head>
+  <body>
+    <div id="app">
+      <canvas id="game-canvas"></canvas>
+      <div id="vignette"></div>
+      <div id="fade"></div>
+      <div id="float-layer"></div>
+      <div id="plate-layer"></div>
+
+      <div id="rotate-prompt" role="dialog" aria-label="Поверните устройство">
+        <div class="rotate-card">
+          <div class="rotate-icon" aria-hidden="true"></div>
+          <h2>Поверните устройство</h2>
+          <p>Племена воительниц играются горизонтально.</p>
+        </div>
+      </div>
+
+      <div id="boot"><p>Пробуждение острова…</p></div>
+      <div id="webgl-fail" hidden>
+        <div class="fail-card">
+          <h1>Нет WebGL</h1>
+          <p>Браузер не смог открыть трёхмерный остров. Обновите Safari или Chrome и включите аппаратное ускорение.</p>
+        </div>
+      </div>
+
+      <header id="main-menu" hidden>
+        <div class="brand-card">
+          <p class="eyebrow">Остров Виа</p>
+          <h1>LATEX <span>TRIBES</span></h1>
+          <p class="subtitle">Племена воительниц</p>
+          <p class="lead">Три племени, один лак, испытания вместо пустых клятв. Собери дары, отстой рубеж и подними свой дом.</p>
+          <nav class="menu-list">
+            <button type="button" data-action="play">Играть</button>
+            <button type="button" data-action="continue" id="btn-continue" disabled>Продолжить</button>
+            <button type="button" data-action="heroine">Героиня</button>
+            <button type="button" data-action="tribe">Племя</button>
+            <button type="button" data-action="shop">Магазин</button>
+            <button type="button" data-action="settings">Настройки</button>
+          </nav>
+          <p class="fine">Янтарь добывается на острове. Платежей нет.</p>
+        </div>
+      </header>
+
+      <section id="hud" hidden>
+        <div class="hud-top">
+          <div class="vitals">
+            <div class="bar hp" aria-label="Здоровье"><span id="hp-fill"></span><em id="hp-text">100</em></div>
+            <div class="bar st" aria-label="Выносливость"><span id="st-fill"></span><em>Силы</em></div>
+            <div id="currency">Янтарь · 0</div>
+            <div id="quest-tracker">
+              <strong id="quest-title">Нет поручения</strong>
+              <span id="quest-detail"></span>
+            </div>
+          </div>
+          <div id="minimap-wrap">
+            <canvas id="minimap" width="180" height="180"></canvas>
+          </div>
+        </div>
+        <div id="interact-prompt" hidden></div>
+        <div id="abilities" class="ability-bar">
+          <div data-ability="light"><b>ЛКМ</b><span>Удар</span></div>
+          <div data-ability="heavy"><b>F</b><span>Сила</span></div>
+          <div data-ability="dodge"><b>Пробел</b><span>Рывок</span></div>
+          <div data-ability="block"><b>ПКМ</b><span>Блок</span></div>
+          <div data-ability="special" id="special-slot"><b id="special-key">Q</b><span id="special-name">Приём</span><i id="special-cd"></i></div>
+        </div>
+      </section>
+
+      <div id="touch" class="touch-controls" hidden>
+        <div id="stick" class="stick" aria-label="Движение"><div id="knob"></div></div>
+        <div class="action-grid">
+          <button type="button" data-touch="special">Особая</button>
+          <button type="button" data-touch="heavy">Сила</button>
+          <button type="button" data-touch="interact">Действие</button>
+          <button type="button" data-touch="dodge">Рывок</button>
+          <button type="button" data-touch="block">Блок</button>
+          <button type="button" data-touch="attack">Удар</button>
+        </div>
+      </div>
+
+      <section id="dialog" hidden>
+        <div class="dialog-card">
+          <div class="dialog-head">
+            <strong id="dialog-name"></strong>
+            <span id="dialog-loyalty"></span>
+          </div>
+          <p id="dialog-text"></p>
+          <div id="dialog-choices"></div>
+        </div>
+      </section>
+
+      <section id="panel" hidden>
+        <header class="panel-head">
+          <h2 id="panel-title"></h2>
+          <button type="button" id="panel-close">Закрыть</button>
+        </header>
+        <div id="panel-body"></div>
+      </section>
+
+      <div id="modal" hidden>
+        <div class="modal-card">
+          <p id="modal-text"></p>
+          <div class="modal-actions">
+            <button type="button" id="modal-yes">Да</button>
+            <button type="button" id="modal-no">Нет</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="toasts"></div>
+      <div id="hint" hidden></div>
+    </div>
+  </body>
+</html>
